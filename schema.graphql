@@ -1,6 +1,27 @@
-type ExampleEntity @entity {
+# -------------------------------------------------
+# Entities created from BathToken contract
+# -------------------------------------------------
+"""
+Deposit event emitted by the BathToken contract when `deposit` is called.
+"""
+type Deposit @entity {
   id: ID!
-  count: BigInt!
-  owner: Bytes! # address
-  spender: Bytes! # address
+  "Amount deposited."
+  depositedAmt: BigInt!
+  "Address of the asset deposited." 
+  asset: Bytes!
+  "Amount of shares received."
+  sharesReceived: BigInt!
+  "Address of the depositor."
+  depositor: Bytes!
+}
+
+"""
+LogInit event emitted by the BathToken contract when it is initialized.
+"""
+type LogInit @entity {
+  "Address of the BathToken contract that emitted this LogInit event."
+  id: ID!
+  "The block.timestamp of when the BathToken contract was initialized."
+  timeOfInit: BigInt!
 }

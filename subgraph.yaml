@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
@@ -10,7 +10,8 @@ dataSources:
       abi: BathToken
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.4
+      file: ./src/mappings/bathToken.ts
       language: wasm/assemblyscript
       entities:
         - Approval
@@ -29,4 +30,3 @@ dataSources:
           handler: handleLogInit
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-      file: ./src/mapping.ts
