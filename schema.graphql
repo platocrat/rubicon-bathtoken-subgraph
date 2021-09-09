@@ -5,6 +5,7 @@
 Deposit event emitted by the BathToken contract when `deposit` is called.
 """
 type Deposit @entity {
+  "Address of the BathToken contract that emitted this event." 
   id: ID!
   "Amount deposited."
   depositedAmt: BigInt!
@@ -15,6 +16,49 @@ type Deposit @entity {
   "Address of the depositor."
   depositor: Bytes!
 }
+
+"""
+Withdrawal event emitted by the BathToken contract.
+"""
+type Withdrawal @entity {
+  "Address of the BathToken contract that emitted this event." 
+  id: ID!
+  "Amount withdrawn."
+  amountWithdrawn: BigInt!
+  "Address of the asset."
+  asset: Bytes!
+  "Amount of shares withdrawn."
+  sharesWithdrawn: BigInt!
+  "Address of the withdrawer."
+  withdrawer: Bytes!
+  "Fee amount."
+  fee: BigInt!
+  "Address that receives the fee."
+  feeTo: Bytes!
+}
+
+"""
+Transfer event emitted by the BathToken contract.
+"""
+type Transfer @entity {
+  "Address of the BathToken contract that emitted this event." 
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  value: BigInt!
+}
+
+"""
+Approval event emitted by the BathToken contract.
+"""
+type Approval @entity {
+  "Address of the BathToken contract that emitted this event." 
+  id: ID!
+  owner: Bytes!
+  spender: Bytes! 
+  value: BigInt!
+}
+
 
 """
 LogInit event emitted by the BathToken contract when it is initialized.

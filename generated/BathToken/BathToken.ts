@@ -110,6 +110,44 @@ export class Transfer__Params {
   }
 }
 
+export class Withdraw extends ethereum.Event {
+  get params(): Withdraw__Params {
+    return new Withdraw__Params(this);
+  }
+}
+
+export class Withdraw__Params {
+  _event: Withdraw;
+
+  constructor(event: Withdraw) {
+    this._event = event;
+  }
+
+  get amountWithdrawn(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get asset(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get sharesWithdrawn(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get withdrawer(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get fee(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+
+  get feeTo(): Address {
+    return this._event.parameters[5].value.toAddress();
+  }
+}
+
 export class BathToken extends ethereum.SmartContract {
   static bind(address: Address): BathToken {
     return new BathToken("BathToken", address);
@@ -205,27 +243,6 @@ export class BathToken extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  approve(spender: Address, value: BigInt): boolean {
-    let result = super.call("approve", "approve(address,uint256):(bool)", [
-      ethereum.Value.fromAddress(spender),
-      ethereum.Value.fromUnsignedBigInt(value)
-    ]);
-
-    return result[0].toBoolean();
-  }
-
-  try_approve(spender: Address, value: BigInt): ethereum.CallResult<boolean> {
-    let result = super.tryCall("approve", "approve(address,uint256):(bool)", [
-      ethereum.Value.fromAddress(spender),
-      ethereum.Value.fromUnsignedBigInt(value)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   balanceOf(param0: Address): BigInt {
@@ -379,6 +396,97 @@ export class BathToken extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  symbol(): string {
+    let result = super.call("symbol", "symbol():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_symbol(): ethereum.CallResult<string> {
+    let result = super.tryCall("symbol", "symbol():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  totalSupply(): BigInt {
+    let result = super.call("totalSupply", "totalSupply():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_totalSupply(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("totalSupply", "totalSupply():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  underlyingToken(): Address {
+    let result = super.call(
+      "underlyingToken",
+      "underlyingToken():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_underlyingToken(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "underlyingToken",
+      "underlyingToken():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  underlying(): Address {
+    let result = super.call("underlying", "underlying():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_underlying(): ethereum.CallResult<Address> {
+    let result = super.tryCall("underlying", "underlying():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  underlyingBalance(): BigInt {
+    let result = super.call(
+      "underlyingBalance",
+      "underlyingBalance():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_underlyingBalance(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "underlyingBalance",
+      "underlyingBalance():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   placeOffer(
     pay_amt: BigInt,
     pay_gem: Address,
@@ -422,34 +530,25 @@ export class BathToken extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  symbol(): string {
-    let result = super.call("symbol", "symbol():(string)", []);
+  approve(spender: Address, value: BigInt): boolean {
+    let result = super.call("approve", "approve(address,uint256):(bool)", [
+      ethereum.Value.fromAddress(spender),
+      ethereum.Value.fromUnsignedBigInt(value)
+    ]);
 
-    return result[0].toString();
+    return result[0].toBoolean();
   }
 
-  try_symbol(): ethereum.CallResult<string> {
-    let result = super.tryCall("symbol", "symbol():(string)", []);
+  try_approve(spender: Address, value: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall("approve", "approve(address,uint256):(bool)", [
+      ethereum.Value.fromAddress(spender),
+      ethereum.Value.fromUnsignedBigInt(value)
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toString());
-  }
-
-  totalSupply(): BigInt {
-    let result = super.call("totalSupply", "totalSupply():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_totalSupply(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("totalSupply", "totalSupply():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   transfer(to: Address, value: BigInt): boolean {
@@ -507,169 +606,6 @@ export class BathToken extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
-
-  underlying(): Address {
-    let result = super.call("underlying", "underlying():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_underlying(): ethereum.CallResult<Address> {
-    let result = super.tryCall("underlying", "underlying():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  underlyingBalance(): BigInt {
-    let result = super.call(
-      "underlyingBalance",
-      "underlyingBalance():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_underlyingBalance(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "underlyingBalance",
-      "underlyingBalance():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  underlyingToken(): Address {
-    let result = super.call(
-      "underlyingToken",
-      "underlyingToken():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_underlyingToken(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "underlyingToken",
-      "underlyingToken():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-}
-
-export class ApproveCall extends ethereum.Call {
-  get inputs(): ApproveCall__Inputs {
-    return new ApproveCall__Inputs(this);
-  }
-
-  get outputs(): ApproveCall__Outputs {
-    return new ApproveCall__Outputs(this);
-  }
-}
-
-export class ApproveCall__Inputs {
-  _call: ApproveCall;
-
-  constructor(call: ApproveCall) {
-    this._call = call;
-  }
-
-  get spender(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get value(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class ApproveCall__Outputs {
-  _call: ApproveCall;
-
-  constructor(call: ApproveCall) {
-    this._call = call;
-  }
-
-  get value0(): boolean {
-    return this._call.outputValues[0].value.toBoolean();
-  }
-}
-
-export class CancelCall extends ethereum.Call {
-  get inputs(): CancelCall__Inputs {
-    return new CancelCall__Inputs(this);
-  }
-
-  get outputs(): CancelCall__Outputs {
-    return new CancelCall__Outputs(this);
-  }
-}
-
-export class CancelCall__Inputs {
-  _call: CancelCall;
-
-  constructor(call: CancelCall) {
-    this._call = call;
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get amt(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class CancelCall__Outputs {
-  _call: CancelCall;
-
-  constructor(call: CancelCall) {
-    this._call = call;
-  }
-}
-
-export class DepositCall extends ethereum.Call {
-  get inputs(): DepositCall__Inputs {
-    return new DepositCall__Inputs(this);
-  }
-
-  get outputs(): DepositCall__Outputs {
-    return new DepositCall__Outputs(this);
-  }
-}
-
-export class DepositCall__Inputs {
-  _call: DepositCall;
-
-  constructor(call: DepositCall) {
-    this._call = call;
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class DepositCall__Outputs {
-  _call: DepositCall;
-
-  constructor(call: DepositCall) {
-    this._call = call;
-  }
 }
 
 export class InitializeCall extends ethereum.Call {
@@ -718,170 +654,32 @@ export class InitializeCall__Outputs {
   }
 }
 
-export class PermitCall extends ethereum.Call {
-  get inputs(): PermitCall__Inputs {
-    return new PermitCall__Inputs(this);
+export class SetMarketCall extends ethereum.Call {
+  get inputs(): SetMarketCall__Inputs {
+    return new SetMarketCall__Inputs(this);
   }
 
-  get outputs(): PermitCall__Outputs {
-    return new PermitCall__Outputs(this);
+  get outputs(): SetMarketCall__Outputs {
+    return new SetMarketCall__Outputs(this);
   }
 }
 
-export class PermitCall__Inputs {
-  _call: PermitCall;
+export class SetMarketCall__Inputs {
+  _call: SetMarketCall;
 
-  constructor(call: PermitCall) {
+  constructor(call: SetMarketCall) {
     this._call = call;
   }
 
-  get owner(): Address {
+  get newRubiconMarket(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
-
-  get spender(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get value(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get deadline(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get v(): i32 {
-    return this._call.inputValues[4].value.toI32();
-  }
-
-  get r(): Bytes {
-    return this._call.inputValues[5].value.toBytes();
-  }
-
-  get s(): Bytes {
-    return this._call.inputValues[6].value.toBytes();
-  }
 }
 
-export class PermitCall__Outputs {
-  _call: PermitCall;
+export class SetMarketCall__Outputs {
+  _call: SetMarketCall;
 
-  constructor(call: PermitCall) {
-    this._call = call;
-  }
-}
-
-export class PlaceOfferCall extends ethereum.Call {
-  get inputs(): PlaceOfferCall__Inputs {
-    return new PlaceOfferCall__Inputs(this);
-  }
-
-  get outputs(): PlaceOfferCall__Outputs {
-    return new PlaceOfferCall__Outputs(this);
-  }
-}
-
-export class PlaceOfferCall__Inputs {
-  _call: PlaceOfferCall;
-
-  constructor(call: PlaceOfferCall) {
-    this._call = call;
-  }
-
-  get pay_amt(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get pay_gem(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get buy_amt(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get buy_gem(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
-}
-
-export class PlaceOfferCall__Outputs {
-  _call: PlaceOfferCall;
-
-  constructor(call: PlaceOfferCall) {
-    this._call = call;
-  }
-
-  get value0(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class RebalanceCall extends ethereum.Call {
-  get inputs(): RebalanceCall__Inputs {
-    return new RebalanceCall__Inputs(this);
-  }
-
-  get outputs(): RebalanceCall__Outputs {
-    return new RebalanceCall__Outputs(this);
-  }
-}
-
-export class RebalanceCall__Inputs {
-  _call: RebalanceCall;
-
-  constructor(call: RebalanceCall) {
-    this._call = call;
-  }
-
-  get sisterBath(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get underlyingAsset(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get stratProportion(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class RebalanceCall__Outputs {
-  _call: RebalanceCall;
-
-  constructor(call: RebalanceCall) {
-    this._call = call;
-  }
-}
-
-export class RemoveFilledTradeAmountCall extends ethereum.Call {
-  get inputs(): RemoveFilledTradeAmountCall__Inputs {
-    return new RemoveFilledTradeAmountCall__Inputs(this);
-  }
-
-  get outputs(): RemoveFilledTradeAmountCall__Outputs {
-    return new RemoveFilledTradeAmountCall__Outputs(this);
-  }
-}
-
-export class RemoveFilledTradeAmountCall__Inputs {
-  _call: RemoveFilledTradeAmountCall;
-
-  constructor(call: RemoveFilledTradeAmountCall) {
-    this._call = call;
-  }
-
-  get amt(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class RemoveFilledTradeAmountCall__Outputs {
-  _call: RemoveFilledTradeAmountCall;
-
-  constructor(call: RemoveFilledTradeAmountCall) {
+  constructor(call: SetMarketCall) {
     this._call = call;
   }
 }
@@ -976,33 +774,249 @@ export class SetFeeToCall__Outputs {
   }
 }
 
-export class SetMarketCall extends ethereum.Call {
-  get inputs(): SetMarketCall__Inputs {
-    return new SetMarketCall__Inputs(this);
+export class CancelCall extends ethereum.Call {
+  get inputs(): CancelCall__Inputs {
+    return new CancelCall__Inputs(this);
   }
 
-  get outputs(): SetMarketCall__Outputs {
-    return new SetMarketCall__Outputs(this);
+  get outputs(): CancelCall__Outputs {
+    return new CancelCall__Outputs(this);
   }
 }
 
-export class SetMarketCall__Inputs {
-  _call: SetMarketCall;
+export class CancelCall__Inputs {
+  _call: CancelCall;
 
-  constructor(call: SetMarketCall) {
+  constructor(call: CancelCall) {
     this._call = call;
   }
 
-  get newRubiconMarket(): Address {
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get amt(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class CancelCall__Outputs {
+  _call: CancelCall;
+
+  constructor(call: CancelCall) {
+    this._call = call;
+  }
+}
+
+export class RemoveFilledTradeAmountCall extends ethereum.Call {
+  get inputs(): RemoveFilledTradeAmountCall__Inputs {
+    return new RemoveFilledTradeAmountCall__Inputs(this);
+  }
+
+  get outputs(): RemoveFilledTradeAmountCall__Outputs {
+    return new RemoveFilledTradeAmountCall__Outputs(this);
+  }
+}
+
+export class RemoveFilledTradeAmountCall__Inputs {
+  _call: RemoveFilledTradeAmountCall;
+
+  constructor(call: RemoveFilledTradeAmountCall) {
+    this._call = call;
+  }
+
+  get amt(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class RemoveFilledTradeAmountCall__Outputs {
+  _call: RemoveFilledTradeAmountCall;
+
+  constructor(call: RemoveFilledTradeAmountCall) {
+    this._call = call;
+  }
+}
+
+export class PlaceOfferCall extends ethereum.Call {
+  get inputs(): PlaceOfferCall__Inputs {
+    return new PlaceOfferCall__Inputs(this);
+  }
+
+  get outputs(): PlaceOfferCall__Outputs {
+    return new PlaceOfferCall__Outputs(this);
+  }
+}
+
+export class PlaceOfferCall__Inputs {
+  _call: PlaceOfferCall;
+
+  constructor(call: PlaceOfferCall) {
+    this._call = call;
+  }
+
+  get pay_amt(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get pay_gem(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get buy_amt(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get buy_gem(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+}
+
+export class PlaceOfferCall__Outputs {
+  _call: PlaceOfferCall;
+
+  constructor(call: PlaceOfferCall) {
+    this._call = call;
+  }
+
+  get value0(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class RebalanceCall extends ethereum.Call {
+  get inputs(): RebalanceCall__Inputs {
+    return new RebalanceCall__Inputs(this);
+  }
+
+  get outputs(): RebalanceCall__Outputs {
+    return new RebalanceCall__Outputs(this);
+  }
+}
+
+export class RebalanceCall__Inputs {
+  _call: RebalanceCall;
+
+  constructor(call: RebalanceCall) {
+    this._call = call;
+  }
+
+  get sisterBath(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
+
+  get underlyingAsset(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get stratProportion(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
 }
 
-export class SetMarketCall__Outputs {
-  _call: SetMarketCall;
+export class RebalanceCall__Outputs {
+  _call: RebalanceCall;
 
-  constructor(call: SetMarketCall) {
+  constructor(call: RebalanceCall) {
     this._call = call;
+  }
+}
+
+export class DepositCall extends ethereum.Call {
+  get inputs(): DepositCall__Inputs {
+    return new DepositCall__Inputs(this);
+  }
+
+  get outputs(): DepositCall__Outputs {
+    return new DepositCall__Outputs(this);
+  }
+}
+
+export class DepositCall__Inputs {
+  _call: DepositCall;
+
+  constructor(call: DepositCall) {
+    this._call = call;
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class DepositCall__Outputs {
+  _call: DepositCall;
+
+  constructor(call: DepositCall) {
+    this._call = call;
+  }
+}
+
+export class WithdrawCall extends ethereum.Call {
+  get inputs(): WithdrawCall__Inputs {
+    return new WithdrawCall__Inputs(this);
+  }
+
+  get outputs(): WithdrawCall__Outputs {
+    return new WithdrawCall__Outputs(this);
+  }
+}
+
+export class WithdrawCall__Inputs {
+  _call: WithdrawCall;
+
+  constructor(call: WithdrawCall) {
+    this._call = call;
+  }
+
+  get _shares(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class WithdrawCall__Outputs {
+  _call: WithdrawCall;
+
+  constructor(call: WithdrawCall) {
+    this._call = call;
+  }
+}
+
+export class ApproveCall extends ethereum.Call {
+  get inputs(): ApproveCall__Inputs {
+    return new ApproveCall__Inputs(this);
+  }
+
+  get outputs(): ApproveCall__Outputs {
+    return new ApproveCall__Outputs(this);
+  }
+}
+
+export class ApproveCall__Inputs {
+  _call: ApproveCall;
+
+  constructor(call: ApproveCall) {
+    this._call = call;
+  }
+
+  get spender(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get value(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class ApproveCall__Outputs {
+  _call: ApproveCall;
+
+  constructor(call: ApproveCall) {
+    this._call = call;
+  }
+
+  get value0(): boolean {
+    return this._call.outputValues[0].value.toBoolean();
   }
 }
 
@@ -1086,32 +1100,56 @@ export class TransferFromCall__Outputs {
   }
 }
 
-export class WithdrawCall extends ethereum.Call {
-  get inputs(): WithdrawCall__Inputs {
-    return new WithdrawCall__Inputs(this);
+export class PermitCall extends ethereum.Call {
+  get inputs(): PermitCall__Inputs {
+    return new PermitCall__Inputs(this);
   }
 
-  get outputs(): WithdrawCall__Outputs {
-    return new WithdrawCall__Outputs(this);
+  get outputs(): PermitCall__Outputs {
+    return new PermitCall__Outputs(this);
   }
 }
 
-export class WithdrawCall__Inputs {
-  _call: WithdrawCall;
+export class PermitCall__Inputs {
+  _call: PermitCall;
 
-  constructor(call: WithdrawCall) {
+  constructor(call: PermitCall) {
     this._call = call;
   }
 
-  get _shares(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get owner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get spender(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get value(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get deadline(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get v(): i32 {
+    return this._call.inputValues[4].value.toI32();
+  }
+
+  get r(): Bytes {
+    return this._call.inputValues[5].value.toBytes();
+  }
+
+  get s(): Bytes {
+    return this._call.inputValues[6].value.toBytes();
   }
 }
 
-export class WithdrawCall__Outputs {
-  _call: WithdrawCall;
+export class PermitCall__Outputs {
+  _call: PermitCall;
 
-  constructor(call: WithdrawCall) {
+  constructor(call: PermitCall) {
     this._call = call;
   }
 }

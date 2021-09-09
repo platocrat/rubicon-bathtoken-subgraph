@@ -28,5 +28,7 @@ dataSources:
           handler: handleDeposit
         - event: LogInit(uint256)
           handler: handleLogInit
+        - event: Withdraw(uint256,address,uint256,address,uint256,address)
+          handler: handleWithdrawal
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
