@@ -3,20 +3,51 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
+    name: BathToken # For USDC
+    network: optimism
+    source:
+      # address of USDC BathToken
+      address: "0xe0e112e8f33d3f437D1F895cbb1A456836125952"
+      abi: TransparentUpgradeableProxy
+      # startBlock: 55000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      file: ./src/mappings/transparentUpgradeableProxy.ts
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - Deposit
+        - LogInit
+        - Withdrawal
+        - Transfer
+      abis:
+        - name: TransparentUpgradeableProxy
+          file: ./abis/TransparentUpgradeableProxy.json
+      eventHandlers:
+        - event: AdminChanged(address,address)
+          handler: handleAdminChanged
+        - event: Implementation(address)
+          handler: handleImplementation
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
+
+templates:
+  - kind: ethereum/contract
     name: BathToken
     network: optimism
     source:
-      address: "0x132d8d4dD164039adcd5CAf0F4815dFCa4D4829C"
       abi: BathToken
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       file: ./src/mappings/bathToken.ts
       language: wasm/assemblyscript
       entities:
         - Approval
         - Deposit
         - LogInit
+        - Withdrawal
         - Transfer
       abis:
         - name: BathToken

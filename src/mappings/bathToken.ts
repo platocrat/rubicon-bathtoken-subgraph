@@ -1,18 +1,22 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { 
-  Deposit as DepositSchema, 
+import {
+  Deposit as DepositSchema,
   LogInit as LogInitSchema,
   Withdrawal as WithdrawalSchema,
   Transfer as TransferSchema,
   Approval as ApprovalSchema
- } from "../../generated/schema"
-import { 
-  LogInit, 
+} from "../../generated/schema"
+import {
+  LogInit,
   Deposit,
-  Withdraw, 
-  Transfer, 
+  Withdraw,
+  Transfer,
   Approval
- } from "../../generated/BathToken/BathToken"
+} from "../../generated/BathToken/BathToken"
+import { BathToken } from "../../generated/templates"
+import { createBathToken } from "./helpers"
+
+const USDC_BATHTOKEN_ADDRESS = "0x132d8d4dD164039adcd5CAf0F4815dFCa4D4829C"
 
 export function handleLogInit(event: LogInit): void {
   let ep = event.params,
@@ -25,6 +29,13 @@ export function handleLogInit(event: LogInit): void {
   logInit.timeOfInit = ep.timeOfInit
 
   logInit.save()
+
+  let usdcBathTokenAddress = Address.fromString(USDC_BATHTOKEN_ADDRESS)
+
+  BathToken.create(usdcBathTokenAddress)
+
+  let bathToken = createBathToken(event.params._event.address, event)
+  bathToken.save()
 }
 
 export function handleDeposit(event: Deposit): void {
