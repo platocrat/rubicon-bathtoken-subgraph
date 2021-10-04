@@ -8,12 +8,12 @@ dataSources:
     source:
       # address of USDC BathToken
       address: "0xe0e112e8f33d3f437D1F895cbb1A456836125952"
-      abi: TransparentUpgradeableProxy
-      # startBlock: 55000
+      abi: BathToken
+      startBlock: 1302257
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
-      file: ./src/mappings/transparentUpgradeableProxy.ts
+      file: ./src/mappings/bathToken.ts
       language: wasm/assemblyscript
       entities:
         - Approval
@@ -22,15 +22,19 @@ dataSources:
         - Withdrawal
         - Transfer
       abis:
-        - name: TransparentUpgradeableProxy
-          file: ./abis/TransparentUpgradeableProxy.json
+        - name: BathToken
+          file: ./abis/bathToken.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: Implementation(address)
-          handler: handleImplementation
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: Deposit(uint256,address,uint256,address)
+          handler: handleDeposit
+        - event: LogInit(uint256)
+          handler: handleLogInit
+        - event: Withdraw(uint256,address,uint256,address,uint256,address)
+          handler: handleWithdrawal
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
 
 templates:
   - kind: ethereum/contract

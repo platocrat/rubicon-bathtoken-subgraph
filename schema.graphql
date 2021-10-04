@@ -59,33 +59,33 @@ type Approval @entity {
   value: BigInt!
 }
 
-# -------------------------------------------------
-# Entities created from TransparentUpgradeableProxy contract.
-# -------------------------------------------------
-"""
-AdminChanged is used to index the previousAdmin addy and the newAdmin addy
-"""
-type AdminChanged @entity {
-  id: ID!
-  previousAdmin: Bytes!
-  newAdmin: Bytes!
-}
+# # -------------------------------------------------
+# # Entities created from TransparentUpgradeableProxy contract.
+# # -------------------------------------------------
+# """
+# AdminChanged is used to index the previousAdmin addy and the newAdmin addy
+# """
+# type AdminChanged @entity {
+#   id: ID!
+#   previousAdmin: Bytes!
+#   newAdmin: Bytes!
+# }
 
-"""
-Implementation is used to index the addy of the currentImplementation contract
-"""
-type Implementation @entity {
-  id: ID!
-  currentImplementation: Bytes!
-}
+# """
+# Implementation is used to index the addy of the currentImplementation contract
+# """
+# type Implementation @entity {
+#   id: ID!
+#   currentImplementation: Bytes!
+# }
 
-"""
-Upgraded is used to index the addy of the implementation contract
-"""
-type Upgraded @entity {
-  id: ID!
-  implementation: Bytes!
-}
+# """
+# Upgraded is used to index the addy of the implementation contract
+# """
+# type Upgraded @entity {
+#   id: ID!
+#   implementation: Bytes!
+# }
 
 """
 LogInit event emitted by the BathToken contract when it is initialized.
