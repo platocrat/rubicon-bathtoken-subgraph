@@ -10,6 +10,7 @@ import {
   Implementation as ImplementationEntity,
   Upgraded as UpgradedEntity,
 } from "../../generated/schema"
+import { BathToken } from "../../generated/templates"
 import { createBathToken } from "./helpers"
 
 export function handleAdminChanged(event: AdminChanged): void {
@@ -51,4 +52,11 @@ export function handleUpgraded(event: Upgraded): void {
   upgraded.implementation = ep.implementation
 
   upgraded.save()
+
+  let usdcImplementationAddress = Address.fromString(upgraded.implementation.toHexString())
+
+  BathToken.create(usdcImplementationAddress)
+
+  let bathToken = createBathToken(event.params._event.address, event)
+  bathToken.save()
 }

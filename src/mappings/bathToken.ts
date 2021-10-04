@@ -29,13 +29,6 @@ export function handleLogInit(event: LogInit): void {
   logInit.timeOfInit = ep.timeOfInit
 
   logInit.save()
-
-  let usdcBathTokenAddress = Address.fromString(USDC_BATHTOKEN_ADDRESS)
-
-  BathToken.create(usdcBathTokenAddress)
-
-  let bathToken = createBathToken(event.params._event.address, event)
-  bathToken.save()
 }
 
 export function handleDeposit(event: Deposit): void {

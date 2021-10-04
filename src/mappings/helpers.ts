@@ -3,7 +3,7 @@ import { BathToken } from "../../generated/BathToken/BathToken";
 import {
   BathToken as BathTokenSchema
 } from "../../generated/schema";
-import { LogInit } from "../../generated/BathToken/BathToken";
+import { Upgraded } from "../../generated/BathToken/TransparentUpgradeableProxy";
 
 
 export let zeroAddress = '0x0000000000000000000000000000000000000000'
@@ -11,7 +11,7 @@ export let zeroAddress = '0x0000000000000000000000000000000000000000'
 
 export function createBathToken(
   _bathTokenAddress: Address,
-  event: LogInit
+  event: Upgraded
 ): BathTokenSchema {
   let bathToken: BathTokenSchema,
     contract = BathToken.bind(_bathTokenAddress)
