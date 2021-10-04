@@ -16,7 +16,7 @@ import {
 import { BathToken } from "../../generated/templates"
 import { createBathToken } from "./helpers"
 
-const USDC_BATHTOKEN_ADDRESS = "0x132d8d4dD164039adcd5CAf0F4815dFCa4D4829C"
+const BATH_TOKEN_IMPLEMENTATION_ADDRESS = "0x132d8d4dD164039adcd5CAf0F4815dFCa4D4829C"
 
 export function handleLogInit(event: LogInit): void {
   let ep = event.params,
